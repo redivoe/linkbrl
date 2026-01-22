@@ -35,6 +35,6 @@ fit$coreferent_pairs
 
 ## References
 
-- Kundinger, B., Reiter, J. P., and Steorts, R. C. (2025). *Efficient and Scalable Bipartite Matching with Fast Beta Linkage (fabl).* **Bayesian Analysis**, 20(3), 949–972. https://doi.org/10.1214/24-BA1427
-
-- Steorts, R. C., Hall, R., and Fienberg, S. E. (2016). *A Bayesian Approach to Graphical Record Linkage and Deduplication.*  **Journal of the American Statistical Association**, 111(516), 1660–1672.  https://doi.org/10.1080/01621459.2015.1105807
+- Kundinger, B., Reiter, J. P., and Steorts, R. C. (2025). *Efficient and Scalable Bipartite Matching with Fast Beta Linkage (fabl).* Bayesian Analysis, 20(3), 949–972. https://doi.org/10.1214/24-BA1427
+- Steorts, R. C., Hall, R., and Fienberg, S. E. (2016). *A Bayesian Approach to Graphical Record Linkage and Deduplication.* Journal of the American Statistical Association, 111(516), 1660–1672. https://doi.org/10.1080/01621459.2015.1105807
+- Redivo, E. (2026+). *Linking the Comparison and Graphical Approaches to Bipartite Matching.* Under review.
