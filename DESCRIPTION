@@ -1,0 +1,18 @@
+Package: linkbrl
+Title: Estimation of Bipartite Record Linkage Models
+Version: 0.1
+Authors@R: 
+    person("Edoardo", "Redivo", , "edoardo.redivo@unibo.it", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    Matrix,
+    MCMCpack,
+    methods,
+    ROI,
+    slam
+Suggests:
+    ROI.plugin.clp
