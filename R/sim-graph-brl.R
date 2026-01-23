@@ -65,11 +65,11 @@ sim_graph_brl <- function(n1, n2, n12, p, L, params = NULL){
   X2 <- array(dim = c(n2, p))
   X12 <- array(dim = c(n12, p))
   for(h in 1:p){
-    if(n2 <= n1){
+    if(n12 < n1){
       X1[(n12+1):n1, h] <- sample.int(n = L[h], size = n1 - n12, replace = TRUE, prob = theta[h, 1:L[h]])
-      if(n12 <= n2){
-        X2[(n12+1):n2, h] <- sample.int(n = L[h], size = n2 - n12, replace = TRUE, prob = theta[h, 1:L[h]])
-      }
+    }
+    if(n12 < n2){
+      X2[(n12+1):n2, h] <- sample.int(n = L[h], size = n2 - n12, replace = TRUE, prob = theta[h, 1:L[h]])
     }
     X12[, h] <- sample.int(n = L[h], size = n12, replace = TRUE, prob = theta[h, 1:L[h]])
   }
