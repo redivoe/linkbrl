@@ -48,7 +48,7 @@ compare_binary <- function(X1, X2, how, candidate_pairs = NULL){
     }
     cat(".")
   }
-  cat("/")
+  cat("/ ")
   attr(Gamma, "how") <- how
   return(Gamma)
 }

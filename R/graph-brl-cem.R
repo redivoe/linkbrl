@@ -80,11 +80,13 @@ graph_brl_cem <- function(X1,
                           max_iter = 50,
                           eps = 1e-4,
                           candidate_pairs = NULL,
-                          comp_data = NULL) {
+                          comp_data = NULL,
+                          solver = "clp") {
 
-  if (!requireNamespace("ROI.plugin.clp", quietly = TRUE)) {
-    stop("Package ROI.plugin.clp is needed.")
-  }
+  sol <- resolve_roi_solver(solver)
+  solver <- sol$solver
+  control_list <- sol$control
+
   theta_method <- match.arg(theta_method)
 
   n1 <- nrow(X1)
@@ -183,7 +185,7 @@ graph_brl_cem <- function(X1,
                                                         dir = rep('<=', n1 + n2),
                                                         rhs = rep(1, n1 + n2)),
                         maximum = TRUE)
-      out_roi <- ROI::ROI_solve(lp_obj, solver = "clp", control = list(amount = 0))
+      out_roi <- ROI::ROI_solve(lp_obj, solver = solver, control = control_list)
       coreferent_pairs <- idx_long_filtered[out_roi$solution == 1, , drop = FALSE]
 
       cloglik[em_iter] <- out_roi$objval

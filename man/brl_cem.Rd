@@ -12,6 +12,7 @@ brl_cem(
   model = c("fs", "graph"),
   reps = 5,
   candidate_pairs = NULL,
+  solver = "clp",
   ...
 )
 
@@ -23,7 +24,8 @@ fs_brl_cem(
   max_iter = 50,
   eps = 1e-04,
   candidate_pairs = NULL,
-  comp_data = NULL
+  comp_data = NULL,
+  solver = "clp"
 )
 
 graph_brl_cem(
@@ -37,7 +39,8 @@ graph_brl_cem(
   max_iter = 50,
   eps = 1e-04,
   candidate_pairs = NULL,
-  comp_data = NULL
+  comp_data = NULL,
+  solver = "clp"
 )
 }
 \arguments{
@@ -56,6 +59,14 @@ candidate record pairs to be considered for matching. Each row corresponds
 to a pair \code{(i, j)}, where \code{i} indexes rows of \code{X1} and
 \code{j} indexes rows of \code{X2} (both 1-based).
 If \code{NULL} (default), all possible record pairs are considered.}
+
+\item{solver}{Character string specifying the LP solver to be used by
+\pkg{ROI}. Currently supported options are \code{"clp"} and
+\code{"lpsolve"}. The default is \code{"clp"}; if the corresponding
+plugin package \pkg{ROI.plugin.clp} is not available, a warning is
+issued and the solver falls back to \code{"lpsolve"} (if available).
+If \code{"lpsolve"} is requested explicitly, the package
+\pkg{ROI.plugin.lpsolve} must be installed.}
 
 \item{...}{Additional arguments passed to the selected fitting function when
 using \code{brl_cem()}.}

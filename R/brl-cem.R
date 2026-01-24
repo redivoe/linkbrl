@@ -51,6 +51,14 @@
 #'
 #' @param comp_data Optional list of precomputed comparison data.
 #'
+#' @param solver Character string specifying the LP solver to be used by
+#'   \pkg{ROI}. Currently supported options are \code{"clp"} and
+#'   \code{"lpsolve"}. The default is \code{"clp"}; if the corresponding
+#'   plugin package \pkg{ROI.plugin.clp} is not available, a warning is
+#'   issued and the solver falls back to \code{"lpsolve"} (if available).
+#'   If \code{"lpsolve"} is requested explicitly, the package
+#'   \pkg{ROI.plugin.lpsolve} must be installed.
+#'
 #' @return
 #' Each routine returns a list containing:
 #' \describe{
@@ -107,7 +115,11 @@ brl_cem <- function(X1,
                     model = c("fs", "graph"),
                     reps = 5,
                     candidate_pairs = NULL,
+                    solver = "clp",
                     ...) {
+
+  sol <- resolve_roi_solver(solver)
+  solver <- sol$solver
 
   model <- match.arg(model)
 
@@ -143,7 +155,7 @@ brl_cem <- function(X1,
     cat("\nModel:", i, "\n\t")
 
     out[[i]] <- tryCatch(
-      expr = do.call(foo, c(list(X1 = X1, X2 = X2, comp_data = comp_data, candidate_pairs = candidate_pairs), extra_args)),
+      expr = do.call(foo, c(list(X1 = X1, X2 = X2, comp_data = comp_data, candidate_pairs = candidate_pairs, solver = solver), extra_args)),
       error = function(e) {
         message("Error caught: ", e$message)
         return(NA)
