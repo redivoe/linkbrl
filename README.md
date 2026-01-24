@@ -18,6 +18,32 @@ The `linkbrl` R package is currently available only on GitHub. To install it, us
 remotes::install_github("redivoe/linkbrl")
 ```
 
+### Linear programming solver
+
+The estimation functions in `linkbrl` rely on the \pkg{ROI} infrastructure to solve linear programs arising in the CEM algorithm.
+At least one of the solver backends *clp* or *lpsolve* must be installed.
+The default and recommended solver in `linkbrl` is *clp*; however, it is slightly more difficult to install.
+
+#### *clp* solver
+
+- Install the **Clp** backend from <https://github.com/coin-or/Clp>
+- Install the **CoinUtils** library from <https://github.com/coin-or/CoinUtils>
+- Then install the following R packages to make the solver available in R:
+
+```r
+# install.packages("remotes")
+devtools::install_github("SysBioChalmers/clpAPI")
+devtools::install_github("datastorm-open/ROI.plugin.clp")
+```
+
+#### *lpsolve* solver
+
+Install the `ROI.plugin.lpsolve` package from CRAN:
+
+```r
+install.packages("ROI.plugin.lpsolve")
+```
+
 ## Basic usage
 
 Input datasets must be provided as integer-encoded categorical matrices, with the same variables (columns) in the same order.
