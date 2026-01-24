@@ -32,8 +32,8 @@ The default and recommended solver in `linkbrl` is *clp*; however, it is slightl
 
 ```r
 # install.packages("remotes")
-devtools::install_github("SysBioChalmers/clpAPI")
-devtools::install_github("datastorm-open/ROI.plugin.clp")
+remotes::install_github("SysBioChalmers/clpAPI")
+remotes::install_github("datastorm-open/ROI.plugin.clp")
 ```
 
 #### *lpsolve* solver
