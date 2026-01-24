@@ -20,7 +20,7 @@ remotes::install_github("redivoe/linkbrl")
 
 ### Linear programming solver
 
-The estimation functions in `linkbrl` rely on the \pkg{ROI} infrastructure to solve linear programs arising in the CEM algorithm.
+The estimation functions in `linkbrl` rely on the **ROI** infrastructure to solve linear programs arising in the CEM algorithm.
 At least one of the solver backends *clp* or *lpsolve* must be installed.
 The default and recommended solver in `linkbrl` is *clp*; however, it is slightly more difficult to install.
 
