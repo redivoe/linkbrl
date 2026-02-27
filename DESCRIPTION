@@ -15,4 +15,5 @@ Imports:
     ROI,
     slam
 Suggests:
-    ROI.plugin.clp
+    ROI.plugin.clp,
+    ROI.plugin.lpsolve
