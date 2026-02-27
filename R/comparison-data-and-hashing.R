@@ -22,7 +22,7 @@ compare_binary <- function(X1, X2, how, candidate_pairs = NULL){
   }
 
   Gamma <- vector("list", p)
-  cat("Comparing datasets: ")
+  cat("\nComparing datasets: ")
 
   for (h in seq_len(p)) {
     x <- compare_fun(X1[i, h], X2[j, h])
