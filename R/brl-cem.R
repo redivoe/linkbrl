@@ -2,7 +2,7 @@
 #'
 #' Fit bipartite record linkage models via a Classification EM (CEM)
 #' algorithm. The matching problem is solved using
-#' \pkg{ROI} with the \pkg{ROI.plugin.clp} backend.
+#' \pkg{ROI} with a linear programming backend.
 #'
 #' Two models are supported:
 #' \itemize{
@@ -24,6 +24,11 @@
 #'   \code{"graph"} selects the graphical record linkage model.
 #'
 #' @param reps Integer. Number of repeated CEM fits in \code{brl_cem()}.
+#'
+#' @param complete_matching Logical. If \code{FALSE} (default), an
+#'   at-most one-to-one matching is enforced (each record can be matched
+#'   at most once). If \code{TRUE}, an exactly one-to-one matching is
+#'   enforced on the smaller dataset (a complete bipartite matching).
 #'
 #' @param candidate_pairs Optional integer matrix with two columns specifying
 #' candidate record pairs to be considered for matching. Each row corresponds
@@ -68,6 +73,11 @@
 #'     iterations.}
 #'   \item{prop}{Estimated overlap proportion of linked records.}
 #'   \item{coreferent_pairs}{Matrix with indices of the predicted coreferent pairs.}
+#'   \item{id_X2}{Integer vector of length \code{nrow(X2)} giving a predicted
+#'     unique identifier for each record in \code{X2}. The implied unique
+#'     identifiers for \code{X1} are \code{1:nrow(X1)}. Together, these
+#'     identifiers define a common linkage key that can be used to join
+#'     \code{X1} and \code{X2} after record linkage.}
 #'   \item{switched_order}{Logical; \code{TRUE} if the input datasets were swapped
 #'     internally because \code{nrow(X1) < nrow(X2)}.}
 #' }
@@ -114,6 +124,7 @@ brl_cem <- function(X1,
                     X2,
                     model = c("fs", "graph"),
                     reps = 5,
+                    complete_matching = FALSE,
                     candidate_pairs = NULL,
                     solver = "clp",
                     ...) {
@@ -136,6 +147,15 @@ brl_cem <- function(X1,
   X1 <- out_recode$X1
   X2 <- out_recode$X2
 
+  prep <- prep_brl_inputs(X1 = X1, X2 = X2, candidate_pairs = candidate_pairs)
+  X1 <- prep$X1
+  X2 <- prep$X2
+  n1 <- prep$n1
+  n2 <- prep$n2
+  p <- prep$p
+  candidate_pairs <- prep$candidate_pairs
+  switched_order <- prep$switched_order
+
   if(model == "graph" && extra_args$theta_method != "uniform"){
     L <- apply(rbind(X1, X2), 2, \(x) length(unique(x)))
   }else{
@@ -145,6 +165,13 @@ brl_cem <- function(X1,
                 "graph" = ifelse(extra_args$theta_method == "uniform", "binary", "value"),
                 "fs"    = "binary")
 
+  if(isTRUE(complete_matching)){
+    if(!is.null(candidate_pairs)){
+      warning("Provided candidate_pairs are ignored due to complete_matching = TRUE.")
+    }
+    candidate_pairs <- cbind(rep(seq_len(n1), times = n2),
+                             rep(seq_len(n2), each = n1))
+  }
   comp_data <- list()
   comp_data$Gamma <- compare_binary(X1, X2, how, candidate_pairs)
   comp_data$out_hash <- hash_Gamma(Gamma = comp_data$Gamma, L = L)
@@ -155,7 +182,17 @@ brl_cem <- function(X1,
     cat("\nModel:", i, "\n\t")
 
     out[[i]] <- tryCatch(
-      expr = do.call(foo, c(list(X1 = X1, X2 = X2, comp_data = comp_data, candidate_pairs = candidate_pairs, solver = solver), extra_args)),
+      expr = do.call(foo, c(
+        list(
+          X1 = X1,
+          X2 = X2,
+          comp_data = comp_data,
+          complete_matching = complete_matching,
+          candidate_pairs = candidate_pairs,
+          solver = solver
+        ),
+        extra_args
+      )),
       error = function(e) {
         message("Error caught: ", e$message)
         return(NA)
@@ -175,6 +212,7 @@ brl_cem <- function(X1,
   out <- out[[best_rep]]
   out$reps <- reps
   out$error_reps <- n_error
+  out$switched_order <- switched_order # from the previous prep_brl_inputs call
 
   return(out)
 }

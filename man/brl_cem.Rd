@@ -11,6 +11,7 @@ brl_cem(
   X2,
   model = c("fs", "graph"),
   reps = 5,
+  complete_matching = FALSE,
   candidate_pairs = NULL,
   solver = "clp",
   ...
@@ -23,6 +24,7 @@ fs_brl_cem(
   b_prop = 2,
   max_iter = 50,
   eps = 1e-04,
+  complete_matching = FALSE,
   candidate_pairs = NULL,
   comp_data = NULL,
   solver = "clp"
@@ -38,6 +40,7 @@ graph_brl_cem(
   theta_method = c("empirical", "uniform", "estimated"),
   max_iter = 50,
   eps = 1e-04,
+  complete_matching = FALSE,
   candidate_pairs = NULL,
   comp_data = NULL,
   solver = "clp"
@@ -53,6 +56,11 @@ Both must have the same variables in the same order.}
 \code{"graph"} selects the graphical record linkage model.}
 
 \item{reps}{Integer. Number of repeated CEM fits in \code{brl_cem()}.}
+
+\item{complete_matching}{Logical. If \code{FALSE} (default), an
+at-most one-to-one matching is enforced (each record can be matched
+at most once). If \code{TRUE}, an exactly one-to-one matching is
+enforced on the smaller dataset (a complete bipartite matching).}
 
 \item{candidate_pairs}{Optional integer matrix with two columns specifying
 candidate record pairs to be considered for matching. Each row corresponds
@@ -97,6 +105,11 @@ matching between records in \code{X1} and \code{X2}.}
 iterations.}
 \item{prop}{Estimated overlap proportion of linked records.}
 \item{coreferent_pairs}{Matrix with indices of the predicted coreferent pairs.}
+\item{id_X2}{Integer vector of length \code{nrow(X2)} giving a predicted
+unique identifier for each record in \code{X2}. The implied unique
+identifiers for \code{X1} are \code{1:nrow(X1)}. Together, these
+identifiers define a common linkage key that can be used to join
+\code{X1} and \code{X2} after record linkage.}
 \item{switched_order}{Logical; \code{TRUE} if the input datasets were swapped
 internally because \code{nrow(X1) < nrow(X2)}.}
 }
@@ -114,7 +127,7 @@ and category probabilities \code{theta}, and the chosen \code{theta_method}.
 \description{
 Fit bipartite record linkage models via a Classification EM (CEM)
 algorithm. The matching problem is solved using
-\pkg{ROI} with the \pkg{ROI.plugin.clp} backend.
+\pkg{ROI} with a linear programming backend.
 }
 \details{
 Two models are supported:
